@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Test files
+test-*.js
+magalu-content.html
+page-centavos.html
+page.html
+shein-content.html
+magalu-screenshot.png
+
+# Server files
+.vercel/
+netlify/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Achadinhos - Júh Indica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #fadadd 0%, #f4c2c2 50%, #f8d7da 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: #fff8f8;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(212, 118, 138, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 2px solid #d4768a;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            max-width: 250px;
+            height: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #a0516d;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            color: #8b455c;
+            font-weight: 600;
+        }
+        input[type="url"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e8a0b3;
+            border-radius: 15px;
+            font-size: 16px;
+            background: #fff5f5;
+            transition: all 0.3s;
+        }
+        input[type="url"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #d4768a;
+            box-shadow: 0 0 0 3px rgba(212, 118, 138, 0.2);
+        }
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #d4768a 0%, #a0516d 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 118, 138, 0.3);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff5f5;
+            border-radius: 15px;
+            border-left: 4px solid #d4768a;
+        }
+        .result-text {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #5c3846;
+            font-size: 14px;
+        }
+        .copy-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #b8d476 0%, #8aa051 100%);
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            color: #d4768a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="assets/logojuuu.png" alt="Júh Indica Logo" class="logo">
+        </div>
+        <h1>Gerador de Achadinhos</h1>
+        <div class="input-group">
+            <input type="url" id="productUrl" placeholder="Cole o link do produto aqui (ex: https://meli.la/11TxqZ2)">
+        </div>
+        
+        <!-- Manual input fields for Shopee -->
+        <div id="shopeeManualInputs" style="display: none; margin-bottom: 20px;">
+            <div class="input-group">
+                <label for="shopeeProductName" style="display: block; margin-bottom: 5px; color: #333;">Nome:</label>
+                <input type="text" id="shopeeProductName" placeholder="Nome do produto" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="shopeeOldPrice" style="display: block; margin-bottom: 5px; color: #333;">De:</label>
+                <input type="text" id="shopeeOldPrice" placeholder="00,00" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="shopeeCurrentPrice" style="display: block; margin-bottom: 5px; color: #333;">Por apenas:</label>
+                <input type="text" id="shopeeCurrentPrice" placeholder="00,00" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+        </div>
+
+        <!-- Manual input fields for Magalu -->
+        <div id="magaluManualInputs" style="display: none; margin-bottom: 20px;">
+            <div class="input-group">
+                <label for="magaluProductName" style="display: block; margin-bottom: 5px; color: #333;">Nome:</label>
+                <input type="text" id="magaluProductName" placeholder="Nome do produto" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="magaluCurrentPrice" style="display: block; margin-bottom: 5px; color: #333;">Por apenas:</label>
+                <input type="text" id="magaluCurrentPrice" placeholder="00,00" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="magaluDiscount" style="display: block; margin-bottom: 5px; color: #333;">Desconto:</label>
+                <input type="text" id="magaluDiscount" placeholder="2%" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+        </div>
+
+        <!-- Manual input fields for SHEIN -->
+        <div id="sheinManualInputs" style="display: none; margin-bottom: 20px;">
+            <div class="input-group">
+                <label for="sheinProductName" style="display: block; margin-bottom: 5px; color: #333;">Nome:</label>
+                <input type="text" id="sheinProductName" placeholder="Nome do produto" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="sheinOldPrice" style="display: block; margin-bottom: 5px; color: #333;">De:</label>
+                <input type="text" id="sheinOldPrice" placeholder="00,00" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+            <div class="input-group">
+                <label for="sheinCurrentPrice" style="display: block; margin-bottom: 5px; color: #333;">Por apenas:</label>
+                <input type="text" id="sheinCurrentPrice" placeholder="00,00" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px;">
+            </div>
+        </div>
+
+        <button id="generateBtn" onclick="generateText()">Gerar Texto</button>
+        
+        <div id="loading" class="loading" style="display: none;">Processando...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="result" class="result" style="display: none;">
+            <textarea id="resultText" style="width: 100%; height: 300px; padding: 10px; font-size: 14px; resize: vertical;"></textarea>
+            <button class="copy-btn" onclick="copyText()">Copiar Texto</button>
+        </div>
+    </div>
+
+    <script>
+        function formatText(link, productName, oldPrice, currentPrice, discount) {
+            if (discount !== undefined) { // Magalu format
+                return `${link}
+💁🏼‍♀️✨Indicação do dia✨💁🏼‍♀️
+
+
+Nome do produto: ${productName}
+
+💸 Por apenas R$ ${currentPrice}
+${discount ? `🎁 ${discount} off` : ''}
+
+
+🙆🏼‍♀️Corre antes que esgote, gatas!!!
+⏰ Promoção por tempo limitado!
+
+💖 Júh Indica 💁🏼‍♀️
+🛍️ Produtos escolhidos com carinho e no precinho✨`;
+            } else { // Mercado Livre/Amazon/Shopee format
+                return `${link}
+💁🏼‍♀️✨Indicação do dia✨💁🏼‍♀️
+
+
+Nome do produto: ${productName}
+
+💰  De: R$ ${oldPrice}
+💸 Por apenas R$ ${currentPrice}
+
+
+
+🙆🏼‍♀️Corre antes que esgote, gatas!!!
+⏰ Promoção por tempo limitado!
+
+💖 Júh Indica 💁🏼‍♀️
+🛍️ Produtos escolhidos com carinho e no precinho✨`;
+            }
+        }
+
+        // Currency mask function for Brazilian format (00,00)
+        function applyCurrencyMask(input) {
+            let value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+            if (value.length === 0) {
+                input.value = '00,00';
+                return;
+            }
+            // Pad with leading zeros to ensure at least 2 digits for cents
+            while (value.length < 3) {
+                value = '0' + value;
+            }
+            // Split into reais and cents
+            const cents = value.slice(-2);
+            let reais = value.slice(0, -2);
+            // Remove leading zeros from reais, but keep at least one zero
+            reais = reais.replace(/^0+/, '') || '0';
+            // Combine with comma
+            input.value = reais + ',' + cents;
+        }
+
+        // Discount mask function
+        function applyDiscountMask(input) {
+            // Remove everything except digits
+            let value = input.value.replace(/[^0-9]/g, '');
+            // If there are digits, add the %
+            if (value) {
+                input.value = value + '%';
+                // Keep cursor before the %
+                input.setSelectionRange(value.length, value.length);
+            } else {
+                input.value = '';
+            }
+        }
+
+        // Apply mask to price inputs
+        document.getElementById('shopeeOldPrice').addEventListener('input', function(e) {
+            applyCurrencyMask(this);
+        });
+        document.getElementById('shopeeCurrentPrice').addEventListener('input', function(e) {
+            applyCurrencyMask(this);
+        });
+        document.getElementById('magaluCurrentPrice').addEventListener('input', function(e) {
+            applyCurrencyMask(this);
+        });
+        document.getElementById('magaluDiscount').addEventListener('input', function(e) {
+            applyDiscountMask(this);
+        });
+        document.getElementById('sheinOldPrice').addEventListener('input', function(e) {
+            applyCurrencyMask(this);
+        });
+        document.getElementById('sheinCurrentPrice').addEventListener('input', function(e) {
+            applyCurrencyMask(this);
+        });
+
+        // Detect platform and show manual inputs
+        document.getElementById('productUrl').addEventListener('input', (e) => {
+            const url = e.target.value.trim().toLowerCase();
+            const isShopee = url.includes('shopee');
+            const isMagalu = url.includes('magazineluiza') || url.includes('magalu');
+            const isShein = url.includes('shein');
+            const isAmazon = url.includes('amazon') || url.includes('link.amazon');
+            const isMercadoLivre = url.includes('mercadolivre') || url.includes('meli');
+
+            const shopeeInputs = document.getElementById('shopeeManualInputs');
+            const magaluInputs = document.getElementById('magaluManualInputs');
+            const sheinInputs = document.getElementById('sheinManualInputs');
+
+            shopeeInputs.style.display = isShopee ? 'block' : 'none';
+            magaluInputs.style.display = isMagalu ? 'block' : 'none';
+            sheinInputs.style.display = isShein ? 'block' : 'none';
+
+            if (isShopee) {
+                // Set initial values when Shopee is detected
+                document.getElementById('shopeeProductName').value = '';
+                document.getElementById('shopeeOldPrice').value = '00,00';
+                document.getElementById('shopeeCurrentPrice').value = '00,00';
+            }
+
+            if (isMagalu) {
+                // Set initial values when Magalu is detected
+                document.getElementById('magaluProductName').value = '';
+                document.getElementById('magaluCurrentPrice').value = '00,00';
+                document.getElementById('magaluDiscount').value = '';
+            }
+
+            if (isShein) {
+                // Set initial values when SHEIN is detected
+                document.getElementById('sheinProductName').value = '';
+                document.getElementById('sheinOldPrice').value = '00,00';
+                document.getElementById('sheinCurrentPrice').value = '00,00';
+            }
+
+            // Hide result and error when URL changes
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        });
+
+        async function generateText() {
+            const url = document.getElementById('productUrl').value.trim();
+            const urlLower = url.toLowerCase();
+            if (!url) {
+                showError('Por favor, insira um link válido');
+                return;
+            }
+
+            const isShopee = urlLower.includes('shopee');
+            const isMagalu = urlLower.includes('magazineluiza') || urlLower.includes('magalu');
+            const isShein = urlLower.includes('shein');
+            const isAmazon = urlLower.includes('amazon') || urlLower.includes('link.amazon');
+            const isMercadoLivre = urlLower.includes('mercadolivre') || urlLower.includes('meli');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const result = document.getElementById('result');
+            const generateBtn = document.getElementById('generateBtn');
+
+            if (isShopee) {
+                // For Shopee, use manual inputs
+                const productName = document.getElementById('shopeeProductName').value.trim();
+                const oldPrice = document.getElementById('shopeeOldPrice').value.trim();
+                const currentPrice = document.getElementById('shopeeCurrentPrice').value.trim();
+
+                if (!productName || !oldPrice || !currentPrice) {
+                    showError('Por favor, preencha todos os campos');
+                    return;
+                }
+
+                const formattedText = formatText(url, productName, oldPrice, currentPrice);
+                document.getElementById('resultText').value = formattedText;
+                result.style.display = 'block';
+                error.style.display = 'none';
+                return;
+            }
+
+            if (isMagalu) {
+                // For Magalu, use manual inputs
+                const productName = document.getElementById('magaluProductName').value.trim();
+                const currentPrice = document.getElementById('magaluCurrentPrice').value.trim();
+                const discount = document.getElementById('magaluDiscount').value.trim();
+
+                if (!productName || !currentPrice) {
+                    showError('Por favor, preencha o nome e o preço');
+                    return;
+                }
+
+                const formattedText = formatText(url, productName, undefined, currentPrice, discount);
+                document.getElementById('resultText').value = formattedText;
+                result.style.display = 'block';
+                error.style.display = 'none';
+                return;
+            }
+
+            if (isShein) {
+                // For SHEIN, use manual inputs
+                const productName = document.getElementById('sheinProductName').value.trim();
+                const oldPrice = document.getElementById('sheinOldPrice').value.trim();
+                const currentPrice = document.getElementById('sheinCurrentPrice').value.trim();
+
+                if (!productName || !oldPrice || !currentPrice) {
+                    showError('Por favor, preencha todos os campos');
+                    return;
+                }
+
+                const formattedText = formatText(url, productName, oldPrice, currentPrice);
+                document.getElementById('resultText').value = formattedText;
+                result.style.display = 'block';
+                error.style.display = 'none';
+                return;
+            }
+
+            // For Mercado Livre and Amazon, proceed with automatic scraping
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            result.style.display = 'none';
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/scrape', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url }),
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao processar o link');
+                }
+
+                const formattedText = formatText(
+                    url,
+                    data.productName || 'Nome do produto',
+                    data.oldPrice || '00,00',
+                    data.currentPrice || '00,00'
+                );
+
+                document.getElementById('resultText').value = formattedText;
+                result.style.display = 'block';
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function copyText() {
+            const text = document.getElementById('resultText').value;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Texto copiado com sucesso!');
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+            });
+        }
+
+        document.getElementById('productUrl').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateText();
+            }
+        });
+    </script>
+</body>
+</html>
