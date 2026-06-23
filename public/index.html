@@ -442,12 +442,43 @@ Nome do produto: ${productName}
         }
 
         function copyText() {
-            const text = document.getElementById('resultText').value;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Texto copiado com sucesso!');
-            }).catch(err => {
-                console.error('Erro ao copiar:', err);
-            });
+            const textarea = document.getElementById('resultText');
+            const text = textarea.value;
+
+            // Use fallback for all cases to avoid permission issues
+            fallbackCopy(text);
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.width = '2em';
+            textarea.style.height = '2em';
+            textarea.style.padding = '0';
+            textarea.style.border = 'none';
+            textarea.style.outline = 'none';
+            textarea.style.boxShadow = 'none';
+            textarea.style.background = 'transparent';
+            document.body.appendChild(textarea);
+            textarea.select();
+            textarea.setSelectionRange(0, 999999); // For mobile devices
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('Texto copiado com sucesso!');
+                } else {
+                    alert('Erro ao copiar. Por favor, copie manualmente.');
+                }
+            } catch (err) {
+                console.error('Erro no fallback:', err);
+                alert('Erro ao copiar. Por favor, copie manualmente.');
+            }
+
+            document.body.removeChild(textarea);
         }
 
         document.getElementById('productUrl').addEventListener('keypress', (e) => {
